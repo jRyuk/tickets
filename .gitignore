@@ -1,0 +1,9 @@
+﻿################################################################################
+# Este archivo .gitignore ha sido creado automáticamente por Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/Tickets/obj
+/Tickets.Infrastructure/obj
+/Tickets.Domain/obj
+/Tickets.Application/obj
