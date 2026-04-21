@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
@@ -12,12 +13,11 @@ namespace Tickets.Infrastructure.Persistence.Repostiories
     {
         protected readonly ApplicationDbContext _context;
 
-        public BaseRepository(ApplicationDbContext applicationDbContext)
+        public  BaseRepository(ApplicationDbContext applicationDbContext)
         {
             _context = applicationDbContext;
         }
-
-        public async Task<TEntity> AddAsync(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
            await _context.Set<TEntity>().AddAsync(entity);
             var result = await _context.SaveChangesAsync();
@@ -29,10 +29,31 @@ namespace Tickets.Infrastructure.Persistence.Repostiories
 
             return entity;
         }
+        public virtual async Task<bool> Delete(int id)
+        {
+            var entity = await _context.Set<TEntity>().FirstOrDefaultAsync(c => c.Id == id);
 
-        public async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
+            if (entity == null) return false;
+
+            entity.IsDeleted = true;
+            
+            return await _context.SaveChangesAsync() >= 1;
+        }
+        public virtual async Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return  _context.Set<TEntity>().Where(predicate).AsQueryable();
+        }
+        public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        }
+
+        public virtual async Task<IQueryable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate, int take, int skip, string search)
+        {
+            var query = _context.Set<TEntity>().Where(predicate);
+
+            //OFFSET= skip, Take = TOP
+            return query.Skip(skip).Take(take).AsQueryable();
         }
     }
 }

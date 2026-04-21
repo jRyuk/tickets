@@ -11,5 +11,12 @@ namespace Tickets.Domain.Interfaces.Repositories
         Task<TEntity> AddAsync(TEntity entity);
 
         Task<IQueryable<TEntity>> FindAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate);
+
+        Task<bool> Delete(int id);
+
+        Task<IQueryable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate, int take, int skip, string search);
+
     }
 }

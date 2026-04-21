@@ -19,11 +19,20 @@ namespace Tickets.Application.Services
             return await _ticketRepository.AddAsync(ticket);
         }
 
-        public async Task<List<Ticket>> FindByIdAsync(int id)
+        public async Task<bool> Delete(int ticketId)
         {
-            return (await _ticketRepository.FindAsync(t => t.Id == id)).ToList();
+            return await _ticketRepository.Delete(ticketId);
         }
 
-      
+        public async Task<Ticket> FindByIdAsync(int id)
+        {
+            return await _ticketRepository.FindFirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<List<Ticket>> GetAll(int take, int skip, string search)
+        {
+            var result = await _ticketRepository.GetAll(c=> !c.IsDeleted, take, skip, search);
+            return result.ToList();
+        }
     }
 }

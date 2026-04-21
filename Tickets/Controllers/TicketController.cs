@@ -20,27 +20,27 @@ namespace Tickets.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TicketDto  ticket)
+        public async Task<IActionResult> Create(TicketDto ticket)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(new { Message = "Datos insuficientes" });
             }
 
-            var userId = this.User.Claims.FirstOrDefault(c=> c.Type == ClaimTypes.NameIdentifier).Value;
+            var userId = this.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
             return Ok(await _ticketsCase.Add(new Ticket()
             {
-               CreatedBy = userId,
-               CreaAt   = DateTime.UtcNow,
-               Description = ticket.Description,
-               EndDate= ticket.End,
-               StartDate = ticket.Start,
-               Hours = ticket.Hour,
-               Title = ticket.Title,
-               UserId = ticket.UserId,
-               IsDeleted = false,
-               Status = TicketStatus.Open
+                CreatedBy = userId,
+                CreaAt = DateTime.UtcNow,
+                Description = ticket.Description,
+                EndDate = ticket.End,
+                StartDate = ticket.Start,
+                Hours = ticket.Hour,
+                Title = ticket.Title,
+                UserId = ticket.UserId,
+                IsDeleted = false,
+                Status = TicketStatus.Open
             }));
         }
 
@@ -48,6 +48,23 @@ namespace Tickets.Controllers
         public async Task<IActionResult> GetById(int ticketId)
         {
             return Ok(await _ticketsCase.FindByIdAsync(ticketId));
+        }
+
+        [HttpDelete("{ticketId:int}")]
+        public async Task<IActionResult> Delete(int ticketId)
+        {
+            var result = await _ticketsCase.Delete(ticketId);
+
+
+            return Ok(new { Success = result });
+        }
+
+        [HttpGet("{take:int}/{skip:int}/{search}")]
+        public async Task<IActionResult> GetAll(int take, int skip, string search)
+        {
+            
+            return Ok(await _ticketsCase.GetAll(take, skip, search));
+
         }
     }
 }
