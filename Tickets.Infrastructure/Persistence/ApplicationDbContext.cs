@@ -21,10 +21,13 @@ namespace Tickets.Infrastructure.Pesistence
             builder.Entity<Ticket>().HasOne<AppIdentityUser>().WithMany()
                 .HasForeignKey(c => c.UserId).OnDelete(DeleteBehavior.NoAction);
 
-            
+            builder.Entity<HistoryTicket>().HasKey(c => c.Id);
+            builder.Entity<HistoryTicket>().HasOne(c => c.Ticket)
+                .WithMany(c=> c.HistoryTickets).HasForeignKey(c=> c.TicketId);
         }
 
         public DbSet<Ticket> Tickets { get; set; }
-      
+        public DbSet<HistoryTicket> HistoryTickets { get; set; }
+
     }
 }

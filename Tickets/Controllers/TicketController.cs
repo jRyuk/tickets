@@ -47,7 +47,8 @@ namespace Tickets.Controllers
         [HttpGet("{ticketId:int}")]
         public async Task<IActionResult> GetById(int ticketId)
         {
-            return Ok(await _ticketsCase.FindByIdAsync(ticketId));
+            var result = await _ticketsCase.FindByIdAsync(ticketId);
+            return Ok(result);
         }
 
         [HttpDelete("{ticketId:int}")]
@@ -59,11 +60,11 @@ namespace Tickets.Controllers
             return Ok(new { Success = result });
         }
 
-        [HttpGet("{take:int}/{skip:int}/{search}")]
-        public async Task<IActionResult> GetAll(int take, int skip, string search)
-        {
+        [HttpGet("GetAll/{page:int}/{take:int}/{search?}")]
+        public async Task<IActionResult> GetAll(int page, int take, string? search)
+       {
             
-            return Ok(await _ticketsCase.GetAll(take, skip, search));
+            return Ok(await _ticketsCase.GetAll(take,page  , search));
 
         }
     }

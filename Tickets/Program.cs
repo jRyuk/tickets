@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using System.Text.Json.Serialization;
 using Tickets.Application.Services;
+using Tickets.Application.Services.HistoryTicketCase;
 using Tickets.Domain.Interfaces;
 using Tickets.Domain.Interfaces.Repositories;
 using Tickets.Infrastructure.Identity;
@@ -27,7 +29,11 @@ builder.Services.AddIdentity<AppIdentityUser, IdentityRole>()
     .AddDefaultTokenProviders();
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+}); 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -38,7 +44,10 @@ builder.Services.AddScoped<IRolePository, RoleRepository>();
 builder.Services.AddScoped<ITickesRepository, TicketsRepository>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<TicketsCase>();
+builder.Services.AddScoped<HistoryService>();
+builder.Services.AddScoped<IHistoryTicketRepository, HistoryTicketRepository>();
 
+    
 
 builder.Services.AddAuthentication(options=>
 {

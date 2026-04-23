@@ -23,8 +23,10 @@ namespace Tickets.Infrastructure.Persistence.Repostiories
             return await base.AddAsync(entity);
         }
 
-        public async override Task<IQueryable<Ticket>> GetAll(Expression<Func<Ticket, bool>> predicate, int take, int skip, string search)
+        public async override Task<IQueryable<Ticket>> GetAll(Expression<Func<Ticket, bool>> predicate, int take, int page, string search)
         {
+            // (1-1) * 10 = 0
+            var skip = (page - 1) * take;
             var query = _context.Set<Ticket>().Where(predicate);
 
             search = search?.ToLower() ?? string.Empty;

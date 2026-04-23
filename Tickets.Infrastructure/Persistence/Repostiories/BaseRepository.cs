@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Azure;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -43,13 +44,22 @@ namespace Tickets.Infrastructure.Persistence.Repostiories
         {
             return  _context.Set<TEntity>().Where(predicate).AsQueryable();
         }
-        public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity?> FindFirstOrDefaultAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
         {
-            return await _context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+            IQueryable<TEntity> query =  _context.Set<TEntity>();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
         }
 
-        public virtual async Task<IQueryable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate, int take, int skip, string search)
+        public virtual async Task<IQueryable<TEntity>> GetAll(Expression<Func<TEntity, bool>> predicate, int take, int page, string search)
         {
+            var skip = (page - 1) * take;
+
             var query = _context.Set<TEntity>().Where(predicate);
 
             //OFFSET= skip, Take = TOP

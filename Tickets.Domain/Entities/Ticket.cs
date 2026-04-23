@@ -6,6 +6,7 @@ namespace Tickets.Domain.Entities
 {
     public class Ticket : BaseEntity
     {
+
         public string Title { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -21,6 +22,8 @@ namespace Tickets.Domain.Entities
         public TicketStatus Status { get; set; }
 
         public string Description { get; set; }
+
+        public ICollection<HistoryTicket> HistoryTickets { get; set; }
 
     }
 

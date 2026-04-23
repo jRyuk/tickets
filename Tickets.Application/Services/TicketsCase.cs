@@ -26,12 +26,12 @@ namespace Tickets.Application.Services
 
         public async Task<Ticket> FindByIdAsync(int id)
         {
-            return await _ticketRepository.FindFirstOrDefaultAsync(t => t.Id == id);
+            return await _ticketRepository.FindFirstOrDefaultAsync(t => t.Id == id, t => t.HistoryTickets);
         }
 
-        public async Task<List<Ticket>> GetAll(int take, int skip, string search)
+        public async Task<List<Ticket>> GetAll(int take, int page, string search)
         {
-            var result = await _ticketRepository.GetAll(c=> !c.IsDeleted, take, skip, search);
+            var result = await _ticketRepository.GetAll(c=> !c.IsDeleted, take, page, search);
             return result.ToList();
         }
     }
