@@ -14,11 +14,17 @@ namespace Tickets.Infrastructure.Persistence.Repostiories
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entity">Entity.Hours es requirdo</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async override Task<Ticket> AddAsync(Ticket entity)
         {
             if (entity == null) throw new ArgumentNullException();
 
-            if (entity.Hours == 0) return null;
+            if (entity.Hours == 0) throw new Exception("Se necesitan las horas del ticket");
 
             return await base.AddAsync(entity);
         }
