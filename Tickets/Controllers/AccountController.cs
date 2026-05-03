@@ -19,6 +19,7 @@ namespace Tickets.Controllers
         }
 
         [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> Register(RegisterUserDto registerUserDto)
         {
             Usuario newUser = new Usuario()
@@ -35,11 +36,11 @@ namespace Tickets.Controllers
         }
 
         [HttpPost("login")]
-     
+
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
 
-           var result =  await _authService.Login(loginDto.Email, loginDto.Password, loginDto.RememberMe);
+            var result = await _authService.Login(loginDto.Email, loginDto.Password, loginDto.RememberMe);
 
             return Ok(new { Token = result });
         }

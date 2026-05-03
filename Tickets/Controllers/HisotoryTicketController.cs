@@ -19,6 +19,8 @@ namespace Tickets.Controllers
         {
             _historyService = historyService;
         }
+        [HttpPost]
+        [Route("AddHistory")]
         public async Task<IActionResult> AddHistoryTicket(HistoryTicketDto historyTicket)
         {
             await _historyService.Add(new HistoryTicket()

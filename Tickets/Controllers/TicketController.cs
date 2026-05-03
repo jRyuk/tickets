@@ -20,6 +20,7 @@ namespace Tickets.Controllers
         }
 
         [HttpPost]
+        [Route("Create")]
         public async Task<IActionResult> Create(TicketDto ticket)
         {
             if (!ModelState.IsValid)
@@ -62,9 +63,9 @@ namespace Tickets.Controllers
 
         [HttpGet("GetAll/{page:int}/{take:int}/{search?}")]
         public async Task<IActionResult> GetAll(int page, int take, string? search)
-       {
-            
-            return Ok(await _ticketsCase.GetAll(take,page  , search));
+        {
+
+            return Ok(await _ticketsCase.GetAll(take, page, search));
 
         }
     }
