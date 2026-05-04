@@ -20,7 +20,6 @@ namespace Tickets.Controllers
         }
 
         [HttpPost]
-        [Route("Create")]
         public async Task<IActionResult> Create(TicketDto ticket)
         {
             if (!ModelState.IsValid)
